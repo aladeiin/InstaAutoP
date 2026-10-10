@@ -1,0 +1,79 @@
+# Main settings for the daily Reel pipeline. Edit freely.
+
+# One account, two topics: the pipeline alternates through this list, one per day.
+rotation: [finance, history]
+
+# true  = upload and publish to Instagram automatically.
+# false = make the video only and leave it in the output folder.
+# (You can also test any time with:  python main.py run --dry-run)
+auto_post: true
+
+claude:
+  model: claude-sonnet-5-5
+  max_attempts: 3          # script rewrites allowed if the fact-check pass fails
+  word_range: [70, 115]    # narration length (about 30-45 seconds spoken)
+  scene_range: [6, 9]
+
+video:
+  width: 1080
+  height: 1920
+  fps: 30
+  scene_pause: 0.30        # seconds of breathing room after each scene
+  end_pause: 0.70
+  font_path: ""            # optional: full path to a .ttf font for captions
+  caption_words: 3         # words shown at once
+  background_color: "0x0f172a"   # used only if no stock clip is found
+
+instagram:
+  graph_base: https://graph.facebook.com
+  api_version: v23.0
+  poll_seconds: 5
+  poll_timeout: 420
+  share_to_feed: true
+
+storage:
+  delete_after_publish: true   # remove the uploaded video from the bucket afterwards
+
+# Optional topic inspiration from Reddit's daily top posts (only titles are used as
+# hints; the script is always written from scratch). Safe to leave on: it fails quietly.
+trends:
+  enabled: true
+  per_subreddit: 8
+
+niches:
+  finance:
+    label: Personal finance
+    voice: en-IN-NeerjaNeural
+    rate: "+4%"
+    subreddits: [personalfinanceindia, personalfinance, financialindependence]
+    caption_footer: "Educational content only, not financial advice."
+    base_hashtags: ["#personalfinance", "#moneytips", "#financialliteracy"]
+    style: >
+      Clear, practical money lessons for young Indian professionals. Hook in the first
+      line with a surprising but true idea or a common mistake. Explain one concept per
+      video with a simple example using round rupee numbers. Warm, direct, no hype.
+    rules:
+      - Teach evergreen concepts only (compounding, emergency funds, inflation, budgeting rules, insurance basics, common money mistakes, behavioral biases).
+      - Never name or recommend specific stocks, mutual funds, crypto assets, brokers, or products.
+      - Never promise or imply returns, never say "guaranteed", never tell the viewer what to buy or sell.
+      - Do not quote current interest rates, tax slabs, limits, or regulations (they change). Use illustrative round numbers and say "for example".
+      - Every number must be arithmetically correct and clearly labelled as an example when hypothetical.
+      - No fear-mongering, no get-rich-quick framing.
+  history:
+    label: History
+    voice: en-US-GuyNeural
+    rate: "+2%"
+    subreddits: [history, AskHistorians, todayilearned]
+    caption_footer: ""
+    base_hashtags: ["#history", "#historyfacts", "#todayilearned"]
+    style: >
+      Gripping, well-paced storytelling about real events, people and turning points,
+      including lesser-known stories from India and the world. Open with the most
+      startling true detail. Build a clear mini-arc: setup, twist, consequence. Vivid
+      but never sensationalized.
+    rules:
+      - Use only well-documented events with broad scholarly agreement; skip legends, disputed claims and anything you are not sure of.
+      - Be careful with exact dates, numbers and quotations. Prefer a year or "around" over false precision. Never invent quotes or dialogue.
+      - Present contested topics neutrally; no inflammatory framing of religion, caste, nationality or ethnicity.
+      - No graphic descriptions of violence.
+      - Do not claim a single cause for complex events.
